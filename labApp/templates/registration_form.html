@@ -36,13 +36,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="ls" class="col-sm-3 control-label">Фамилия:</label>
+                <label for="lname" class="col-sm-3 control-label">Фамилия:</label>
                 <div class="col-sm-9">
                     <input type="text" name="last_name" value="{{ last_name }}" id="ls">
                 </div>
             </div>
             <div class="form-group">
-                <label for="fs" class="col-sm-3 control-label">Имя:</label>
+                <label for="fname" class="col-sm-3 control-label">Имя:</label>
                 <div class="col-sm-9">
                     <input type="text" name="first_name" value="{{ first_name }}" id="fs">
                 </div>
@@ -50,14 +50,15 @@
             <div class="form-group">
                 <label for="bday" class="col-sm-3 control-label">Дата рождения:</label>
                 <div class="col-sm-9">
-                    <input type="date" name="bday" value="{{ birthday }}" id="bday">
+                    <input type="date" name="birthday" value="{{ birthday }}" id="bday">
                 </div>
             </div>
             <div class="form-group">
                 <label for="sex" class="col-sm-3 control-label">Пол:</label>
                 <div class="col-sm-9">
-                    <input type="radio" name="sex" value="{{ sex }}" id="sex">M
-                    <input type="radio" name="sex" value="{{ sex }}" id="sex">Ж
+                    <input type="text" name="sex" value="{{ sex }}" id="sex">
+                    <!--<input type="radio" name="sex" value="{{ sex }}" id="sex">M
+                    <input type="radio" name="sex" value="{{ sex }}" id="sex">Ж-->
                 </div>
             </div>
             <div class="form-group">

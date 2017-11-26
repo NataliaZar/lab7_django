@@ -42,16 +42,12 @@ class ProdactAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     empty_value_display = '-empty-'
-    fields = ('username', 'prodact', 'date')
     list_display = ('username', 'prodact', 'date')
-    list_filter = ('prodact',)
-    search_fields = ['prodact']
+    list_filter = ('prodact__prodact_name',)
+    search_fields = ['prodact__prodact_name']
 
     def username(self, obj):
         return "{}".format(obj.user.user)
-
-    def prodact(self, obj):
-        return obj.prodact.prodact_name
 
     def date(self, obj):
         return "{}".format(obj.order_date)

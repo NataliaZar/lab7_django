@@ -32,61 +32,63 @@ class OrderView(ListView):
 
 # представления для веб-форм
 
-
+# регистрация вручную
 def registration_form(request):
-    errors = []
+    errors = {}
     request.encoding = 'utf-8'
     if request.method == 'POST':
         username = request.POST.get('username')
         if not username:
-            errors.append('Введите логин')
+            errors['uname']='Введите логин'
         elif len(username) < 5:
-            errors.append('Длина логина должна быть более 5 символов')
+            errors['uname']='Длина логина должна быть не меньше 5 символов'
 
         if User.objects.filter(username=username).exists():
             errors['uname']='Такой логин уже занят'
 
         password = request.POST.get('password')
-        if not username:
-            errors.append('Введите пароль')
-        elif len(username) < 6:
-            errors.append('Длина пароля должна быть более 6 символов')
-        password2 = request.POST.get('password2')
+        if not password:
+            errors['psw']='Введите пароль'
+        elif len(password) < 8:
+            errors['psw']='Длина пароля должна быть не меньше 8 символов'
 
+        password2 = request.POST.get('password2')
         if password != password2:
-            errors.append('Пароли не совпадают')
+            errors['psw2']='Пароли должны совпадать'
 
         email = request.POST.get('email')
         if not email:
-            errors['email'] = 'Введите email'
+            errors['email']='Введите email'
 
         last_name = request.POST.get('last_name')
         if not last_name:
-            errors['lname'] = 'Введите фамилию'
+            errors['lname']='Введите фамилию'
 
         first_name = request.POST.get('first_name')
         if not first_name:
-            errors['fname'] = 'Введите имя'
+            errors['fname']='Введите имя'
 
         birthday = request.POST.get('birthday')
         if not birthday:
             errors['bday'] = 'Введите дату рождения'
 
-        sex = request.POST.get('first_name')
+        sex = request.POST.get('sex')
         if not sex:
             errors['sex'] = 'Введите пол'
 
         if not errors:
-            user = User.objects.create_user(username, password)
+
+            user = User.objects.create_user(username, email, password)
             cust = Customer()
-            cust.customer_name = username
-            cust.email = email
+            cust.user = user
+            #cust.customer_name = username
+            #cust.email = email
             cust.last_name = last_name
             cust.first_name = first_name
             cust.birthday = birthday
             cust.sex = sex
             cust.save()
-            return HttpResponseRedirect('/authorization')
+            return HttpResponseRedirect('/authorization_form')
         else:
             context = {'errors': errors, 'username': username, 'email': email, 'last_name': last_name,
                    'first_name': first_name, 'birthday': birthday, 'sex': sex}
@@ -104,7 +106,10 @@ class RegistrationForm(forms.Form):
     last_name = forms.CharField(label='Фамилия')
     first_name = forms.CharField(label='Имя')
     birthday = forms.DateField(label='День рождения')
-    sex = forms.CharField(label='Пол')
+    #sex = forms.CharField(label='Пол')
+    choices = (('м', 'мужской'), ('ж', 'женский'))
+    sex = forms.ChoiceField(label='Пол', widget=forms.RadioSelect, choices=choices)
+
 
 class AuthorizationForm(forms.Form):
     username = forms.CharField(label='Логин')
@@ -148,24 +153,18 @@ def authorization_form(request):
         username = request.POST.get('username')
         if not username:
             errors['uname']='Введите логин'
-        elif len(username) < 5:
-            errors['uname']='Длина логина должна быть не меньше 5 символов'
 
         password = request.POST.get('password')
         if not password:
             errors['psw']='Введите пароль'
-        elif len(password) < 8:
-            errors['psw']='Длина пароля должна быть не меньше 8 символов'
 
         user = authenticate(request, username=username, password=password)
-        #user = authenticate(request, username='petrov',password='12345678')
         if user is None and 'uname' not in errors.keys() and 'psw' not in errors.keys():
             errors['login'] = 'Логин или пароль введены неверно'
 
         if not errors:
             login(request, user)
-            return HttpResponseRedirect('/success_authorization_dumb')
-            #return HttpResponseRedirect('/success_authorization')
+            return HttpResponseRedirect('/success_authorization_form')
         else:
             context = {'errors': errors}
             return render(request, 'authorization_form.html', context)
@@ -209,7 +208,7 @@ def success_authorization_form(request):
 def success_authorization(request):
     return HttpResponseRedirect('/')
 
-
+# выход
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect('/')

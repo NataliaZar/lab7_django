@@ -5,15 +5,16 @@ from django.contrib import admin
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    customer_name = models.CharField(max_length=30)
+    #customer_name = models.CharField(max_length=30)
     email = models.EmailField(max_length=75)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     birthday = models.DateField()
+    #sex = models.BooleanField()
     sex = models.CharField(max_length=1)
 
-    def __unicode__(self):
-        return self.customer_name
+    def __str__(self):
+        return "{}".format(self.user)
 
 
 class Prodact(models.Model):
@@ -21,8 +22,8 @@ class Prodact(models.Model):
     description = models.CharField(max_length=255, null=True)
     price = models.FloatField(max_length=10)
 
-    def __unicode__(self):
-        return self.prodact_name
+    def __str__(self):
+        return "{} {}".format(self.prodact_name, self.description)
 
 
 class Order(models.Model):
